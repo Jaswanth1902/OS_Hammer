@@ -1,0 +1,54 @@
+# Dynamic Preemptive OS Hammer: Heavy Applications Registry
+# ==========================================================
+# Any active foreground window belonging to the executables listed below
+# triggers an immediate throttle of background LLM inference processes
+# to psutil.IDLE_PRIORITY_CLASS to maintain smooth interactive responsiveness.
+
+heavy_apps:
+  # Code Editors & IDEs
+  - "code.exe"              # Visual Studio Code / Cursor / Windsurf
+  - "devenv.exe"            # Visual Studio
+  - "idea64.exe"            # IntelliJ IDEA
+  - "pycharm64.exe"         # PyCharm
+  - "webstorm64.exe"        # WebStorm
+  - "clion64.exe"           # CLion
+  - "sublime_text.exe"      # Sublime Text
+  - "zed.exe"               # Zed Editor
+
+  # Web Browsers & Heavy Web Apps
+  - "chrome.exe"            # Google Chrome
+  - "msedge.exe"            # Microsoft Edge
+  - "firefox.exe"           # Mozilla Firefox
+  - "brave.exe"             # Brave Browser
+  - "arc.exe"               # Arc Browser
+
+
+  # Compilers & Heavy CLI Runtimes
+  - "cargo.exe"             # Rust Cargo
+  - "rustc.exe"             # Rust Compiler
+  - "cl.exe"                # MSVC C++ Compiler
+  - "ninja.exe"             # Ninja Build
+
+  # 3D, CAD & Game Engines (Foreground GPU & CPU Demands)
+  - "blender.exe"           # Blender 3D
+  - "unreal.exe"            # Unreal Engine
+  - "unrealengine.exe"      # Unreal Engine
+  - "unity.exe"             # Unity Editor
+  - "autocad.exe"           # Autodesk AutoCAD
+  - "3dsmax.exe"            # 3ds Max
+  - "maya.exe"              # Autodesk Maya
+  - "sketchup.exe"          # SketchUp
+
+  # Video, Audio & Motion Graphics
+  - "premiere.exe"          # Adobe Premiere Pro
+  - "afterfx.exe"           # Adobe After Effects
+  - "resolve.exe"           # DaVinci Resolve
+  - "davinci resolve.exe"   # DaVinci Resolve Studio
+  - "capcut.exe"            # CapCut
+  - "obs64.exe"             # Open Broadcaster Software (OBS)
+
+  # Design & Digital Illustration
+  - "photoshop.exe"         # Adobe Photoshop
+  - "illustrator.exe"       # Adobe Illustrator
+  - "gimp.exe"              # GIMP
+  - "figma.exe"             # Figma Desktop
