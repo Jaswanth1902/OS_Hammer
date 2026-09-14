@@ -1,0 +1,93 @@
+# System-Wide Local LLM Command Center Configuration
+# ====================================================
+
+# Network & Reverse Proxy Binding
+host: "127.0.0.1"
+port: 11434
+
+# Upstream LLM Server (Ollama hidden port / vLLM / llama.cpp)
+upstream_url: "http://127.0.0.1:11435"
+
+# Local Three-Model Inference Roster & Hardware Bounds
+# Calibrated for Ryzen 7 CPU host (8 physical cores / 16 threads, 2 GB VRAM limit).
+# Sequential single-stream inference with 8 physical threads to preserve 8 SMT threads for OS/UI.
+model_roster:
+  upstream_engine: "ollama"
+  shared_memory_ceiling_gb: 8.0
+  sequential_loading: true
+  ollama_num_parallel: 1
+  models:
+    triage_model:
+      name: "qwen2.5:7b"
+      alias: "triage_model"
+      role: "Pacing, JSON schema extraction, regex transforms, rapid blueprint synthesis"
+      num_ctx: 4096
+      num_thread: 8
+      num_predict: 1024
+      max_memory_mb: 5500
+    code_worker_model:
+      name: "qwen2.5-coder:7b"
+      alias: "code_worker_model"
+      role: "AST surgical refactoring, TDD fixtures"
+      num_ctx: 4096
+      num_thread: 8
+      num_predict: 1024
+      max_memory_mb: 5500
+    agentic_worker_model:
+      name: "hermes3:8b"
+      alias: "agentic_worker_model"
+      role: "NVIDIA Hermes Agent, MCP tool bindings, complex fallback synthesis"
+      num_ctx: 4096
+      num_thread: 8
+      num_predict: 1024
+      max_memory_mb: 6000
+
+# Hardware Limits & Dynamic Concurrency Governor
+# High-throughput ceiling calibrated for concurrent automated agents, copilot completions,
+# and GUI chat streams without CPU thrashing or queuing bottlenecks.
+max_threads: 24
+request_timeout: 600.0
+connect_timeout: 10.0
+client_max_connections: 100
+client_max_keepalive: 50
+
+# OS Preemptive Hammer Settings
+hammer:
+  enabled: true
+  poll_interval_sec: 0.5            # Rapid 500ms cycle for interactive responsiveness
+  debounce_cycles: 3                # 3-cycle filter against transient focus glitches
+  engage_delay_sec: 2.0             # Sustained heavy-app focus required before throttling
+  release_delay_sec: 2.0            # Schmitt-trigger dwell cooldown before priority restore
+  pid_cache_ttl_sec: 30.0           # O(1) process handle cache validity TTL
+  throttle_priority: "BELOW_NORMAL" # BELOW_NORMAL prevents thread starvation; IDLE yields max cycles
+  normal_priority: "NORMAL"         # Normal execution priority
+  target_processes:
+    - "llama-server.exe"
+    - "ollama_llama_server.exe"
+    - "vllm.exe"
+    - "vllm"
+    # Tier 3 Playwright headless browsers — throttled when AI is not actively using them
+    - "chrome.exe"
+    - "msedge.exe"
+    - "chromedriver.exe"
+
+  heavy_apps_file: "heavy_apps.yaml"
+  cpu_load_threshold_percent: 96.0  # Trigger throttle only on true runaway load (96%+ sustained), avoiding self-throttle during inference
+  cpu_temp_threshold_c: 82.0        # Trigger throttle if CPU package temperature exceeds 82C
+  check_cpu_package: true           # Monitor CPU package load & temperature
+  check_foreground_graphics: true   # Monitor foreground GPU/creative/CAD/rendering demands
+
+# Zero-GUI Notifications via Ntfy Server
+ntfy:
+  enabled: true
+  url: "http://localhost:8080/llm-command-centre"
+  silent_priority: "min" # min/low ensures zero popup or audio interruptions
+  timeout_sec: 2.0
+
+# Structured Logging for task-observer
+logging:
+  log_dir: "logs"
+  log_file: "command_center.log.jsonl"
+  max_bytes: 10485760 # 10 MB per file
+  backup_count: 5
+  level: "INFO"
