@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "os-hammer"
+version = "1.0.0"
+description = "Local LLM reverse proxy and preemptive OS priority governor with Schmitt-trigger hysteresis."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "K. Sai Jaswanth Reddy", email = "jaswanthreddy1902@gmail.com" }
+]
+keywords = [
+    "llm",
+    "reverse-proxy",
+    "ollama",
+    "process-governor",
+    "os-priority",
+    "hysteresis",
+    "local-ai",
+    "fastapi"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: System :: Operating System",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.22.0",
+    "httpx>=0.24.0",
+    "pyyaml>=6.0",
+    "psutil>=5.9.0",
+    "pywin32>=306; sys_platform == 'win32'"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0"
+]
+
+[project.scripts]
+os-hammer = "main:main"
+
+[project.urls]
+Homepage = "https://github.com/Jaswanth1902/OS_Hammer"
+Repository = "https://github.com/Jaswanth1902/OS_Hammer"
+Issues = "https://github.com/Jaswanth1902/OS_Hammer/issues"
